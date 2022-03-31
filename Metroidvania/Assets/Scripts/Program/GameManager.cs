@@ -37,7 +37,7 @@ namespace JlMetroidvaniaProject
         private static GameManager s_m_gameManager;
         private static InputSystem s_m_inputSystem;
 
-        private void Awake()
+        protected override void Awake()
         {
             m_InstantiateSingletonInstance();
             m_InstantiateSingletoneInputSystem();
@@ -64,9 +64,9 @@ namespace JlMetroidvaniaProject
             }
         }
 
-        private void Update()
+        protected override void Update()
         {
-            s_m_inputSystem.CheckInputs();
+            s_m_inputSystem.Update();
         }
     }
 }

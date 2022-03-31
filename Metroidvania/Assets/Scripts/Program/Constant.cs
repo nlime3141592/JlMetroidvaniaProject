@@ -8,5 +8,8 @@ namespace JlMetroidvaniaProject
         public static readonly string c_INTERACTIVES_LAYER_NAME = "Interactives";
         public static readonly string c_ENTITY_LAYER_NAME = "Entity";
         public static readonly string c_FOREGROUND_LAYER_NAME = "Foreground";
+
+        public static readonly float c_INFINITE_MIN_POSITIVE = (float)1e-06;
+        public static readonly float c_INFINITE_MIN_NEGATIVE = (float)-1e-06;
     }
 }

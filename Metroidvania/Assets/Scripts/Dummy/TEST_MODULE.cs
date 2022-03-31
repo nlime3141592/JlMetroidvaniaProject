@@ -20,12 +20,12 @@ namespace JlMetroidvaniaProject.Dummy
         public Vector2 traceDelay;
         public Vector2 targetOffset;
 
-        void Start()
+        protected override void Start()
         {
             
         }
 
-        void Update()
+        protected override void Update()
         {
             if(check1)
             {

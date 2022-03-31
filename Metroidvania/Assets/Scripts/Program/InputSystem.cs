@@ -2,11 +2,12 @@ using System;
 
 using UnityEngine;
 
+using JlMetroidvaniaProject.Datas;
 using JlMetroidvaniaProject.Utility;
 
 namespace JlMetroidvaniaProject
 {
-    public sealed class InputSystem
+    public sealed class InputSystem : StateBase
     {
         public event Action evhdlr_checkEvent;
 
@@ -27,7 +28,7 @@ namespace JlMetroidvaniaProject
             evhdlr_checkEvent += () => { DebugUtility.UnityLog("On CheckInputs()"); };
         }
 
-        public void CheckInputs()
+        public override void Update()
         {
             m_isPressingHorizontal = Input.GetButton("Horizontal");
             m_horizontalAxis = Input.GetAxisRaw("Horizontal");

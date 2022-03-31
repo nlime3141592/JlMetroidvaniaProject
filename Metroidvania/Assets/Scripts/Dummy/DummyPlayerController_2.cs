@@ -8,12 +8,12 @@ namespace JlMetroidvaniaProject
     {
         private Rigidbody2D m_rigidbody;
 
-        private void Start()
+        protected override void Start()
         {
             m_rigidbody = GetComponent<Rigidbody2D>();
         }
 
-        private void Update()
+        protected override void Update()
         {
             RaycastHit2D hit;
             bool CanRaycast = PhysicsUtility2D.RaycastTerrain2D(transform.position, Vector2.down, 0.51f, out hit);

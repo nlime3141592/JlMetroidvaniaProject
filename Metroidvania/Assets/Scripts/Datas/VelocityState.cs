@@ -43,14 +43,28 @@ namespace JlMetroidvaniaProject.Datas
         /// <returns>the Y of normaized velocity. (-1.0f, 0.0f, 1.0f)</returns>
         public float axisY => m_axisY;
 
+        /// <summary>
+        /// X축 방향으로 속도를 반환합니다.
+        /// </summary>
+        public float X => m_rigidbody.velocity.x;
+
+        /// <summary>
+        /// Y축 방향으로 속도를 반환합니다.
+        /// </summary>
+        public float Y => m_rigidbody.velocity.y;
+
         private float m_axisX;
         private float m_axisY;
 
         private Rigidbody2D m_rigidbody;
 
-        public VelocityState(Rigidbody2D rigidbody)
+        private VelocityStateInitializer m_initializer;
+
+        public VelocityState(VelocityStateInitializer initializer)
         {
-            m_rigidbody = rigidbody;
+            m_initializer = initializer;
+
+            m_rigidbody = initializer.rigidbody;
         }
 
         public override void Update()

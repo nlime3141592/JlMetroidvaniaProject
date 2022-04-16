@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 
 using JlMetroidvaniaProject.Utility;
+using JlMetroidvaniaProject.Physics;
 
 namespace JlMetroidvaniaProject.Datas
 {
@@ -33,32 +34,21 @@ namespace JlMetroidvaniaProject.Datas
         private bool m_isRight;
         private bool m_isBottom;
 
-        private TerrainCollisionStateOption m_updateOption;
+        private TerrainCollisionStateInitializer m_initializer;
         private RaycastHit2D m_hitLeft;
         private RaycastHit2D m_hitRight;
         private RaycastHit2D m_hitBottom;
 
-        public TerrainCollisionState(TerrainCollisionStateOption updateOption)
+        public TerrainCollisionState(TerrainCollisionStateInitializer initializer)
         {
-            m_updateOption = updateOption;
+            m_initializer = initializer;
         }
 
         public override void Update()
         {
-            m_isLeft = PhysicsUtility2D.RaycastTerrain2D((Vector2)m_updateOption.leftOrigin.position, Vector2.left, m_updateOption.leftRayDistance, out m_hitLeft);
-            m_isRight = PhysicsUtility2D.RaycastTerrain2D((Vector2)m_updateOption.rightOrigin.position, Vector2.right, m_updateOption.rightRayDistance, out m_hitRight);
-            m_isBottom = PhysicsUtility2D.RaycastTerrain2D((Vector2)m_updateOption.bottomOrigin.position, Vector2.down, m_updateOption.bottomRayDistance, out m_hitBottom);
+            m_isLeft = MetroidPhysics.Raycast2D((Vector2)m_initializer.leftOrigin.position, Vector2.left, m_initializer.leftRayDistance, Constant.c_TERRAIN_LAYER_NAME, out m_hitLeft);
+            m_isRight = MetroidPhysics.Raycast2D((Vector2)m_initializer.rightOrigin.position, Vector2.right, m_initializer.rightRayDistance, Constant.c_TERRAIN_LAYER_NAME, out m_hitRight);
+            m_isBottom = MetroidPhysics.Raycast2D((Vector2)m_initializer.bottomOrigin.position, Vector2.down, m_initializer.bottomRayDistance, Constant.c_TERRAIN_LAYER_NAME, out m_hitBottom);
         }
-    }
-
-    [Serializable]
-    public struct TerrainCollisionStateOption
-    {
-        public Transform leftOrigin;
-        public Transform rightOrigin;
-        public Transform bottomOrigin;
-        public float leftRayDistance;
-        public float rightRayDistance;
-        public float bottomRayDistance;
     }
 }

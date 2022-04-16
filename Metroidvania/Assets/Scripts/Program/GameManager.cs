@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 
 using JlMetroidvaniaProject.Utility;
+using JlMetroidvaniaProject.Datas;
 
 namespace JlMetroidvaniaProject
 {
@@ -13,9 +14,7 @@ namespace JlMetroidvaniaProject
             get
             {
                 if(s_m_gameManager == null)
-                {
                     throw new NullReferenceException("Game Manager is NULL.");
-                }
 
                 return s_m_gameManager;
             }
@@ -26,47 +25,33 @@ namespace JlMetroidvaniaProject
             get
             {
                 if(s_m_inputSystem == null)
-                {
                     throw new NullReferenceException("Input System is NULL.");
-                }
 
                 return s_m_inputSystem;
             }
         }
 
-        private static GameManager s_m_gameManager;
+        private static InputState s_m_inputState;
         private static InputSystem s_m_inputSystem;
+        private static GameManager s_m_gameManager;
 
         protected override void Awake()
         {
-            m_InstantiateSingletonInstance();
-            m_InstantiateSingletoneInputSystem();
-        }
+            base.Awake();
 
-        private void m_InstantiateSingletonInstance()
-        {
+            s_m_inputState = new InputState();
+            s_m_inputSystem = new InputSystem(s_m_inputState);
+
             if(s_m_gameManager == null)
-            {
                 s_m_gameManager = this;
-                DontDestroyOnLoad(this);
-            }
             else
-            {
-                GameObject.DestroyImmediate(this.gameObject);
-            }
-        }
-
-        private void m_InstantiateSingletoneInputSystem()
-        {
-            if(s_m_inputSystem == null)
-            {
-                s_m_inputSystem = new InputSystem();
-            }
+                DestroyImmediate(this.gameObject);
         }
 
         protected override void Update()
         {
-            s_m_inputSystem.Update();
+            if(s_m_inputSystem != null)
+                s_m_inputState.Update();
         }
     }
 }

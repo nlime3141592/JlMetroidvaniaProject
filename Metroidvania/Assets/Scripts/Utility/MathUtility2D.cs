@@ -24,9 +24,4 @@ namespace JlMetroidvaniaProject.Utility
             return a > b ? a : b;
         }
     }
-
-    public enum ClampMode : int
-    {
-        Min = -1, Max = 1
-    }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
+using JlMetroidvaniaProject.Graphics;
 using JlMetroidvaniaProject.Utility;
 
 namespace JlMetroidvaniaProject.Dummy

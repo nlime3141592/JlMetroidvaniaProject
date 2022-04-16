@@ -1,6 +1,7 @@
 using UnityEngine;
 
 using JlMetroidvaniaProject.Utility;
+using JlMetroidvaniaProject.Physics;
 
 namespace JlMetroidvaniaProject
 {
@@ -16,7 +17,7 @@ namespace JlMetroidvaniaProject
         protected override void Update()
         {
             RaycastHit2D hit;
-            bool CanRaycast = PhysicsUtility2D.RaycastTerrain2D(transform.position, Vector2.down, 0.51f, out hit);
+            bool CanRaycast = MetroidPhysics.Raycast2D(transform.position, Vector2.down, 0.51f, Constant.c_TERRAIN_LAYER_NAME, out hit);
 
             if(hit)
             {
@@ -35,10 +36,7 @@ namespace JlMetroidvaniaProject
 
         private void m_Jump()
         {
-            if(GameManager.s_inputSystem.isPressDownJump)
-            {
-                PhysicsUtility2D.DoUniformMotion2D(m_rigidbody, 5.5f, AxisType.Y);
-            }
+            // if(GameManager.s_inputSystem.isPressDownJump) MetroidPhysics.DoUniformMotion2D(m_rigidbody, 5.5f, AxisType.Y);
         }
 
         private void m_Move()
@@ -50,11 +48,11 @@ namespace JlMetroidvaniaProject
             {
                 float direction = left ? -1.0f : 1.0f;
 
-                PhysicsUtility2D.DoUniformMotion2D(m_rigidbody, 2.5f * direction, AxisType.X);
+                MetroidPhysics.DoUniformMotion2D(m_rigidbody, 2.5f * direction, AxisType.X);
             }
             else
             {
-                PhysicsUtility2D.DoUniformMotion2D(m_rigidbody, 0.0f, AxisType.X);
+                MetroidPhysics.DoUniformMotion2D(m_rigidbody, 0.0f, AxisType.X);
             }
         }
     }

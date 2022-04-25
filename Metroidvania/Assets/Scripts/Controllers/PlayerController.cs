@@ -81,6 +81,16 @@ namespace JlMetroidvaniaProject.Controllers
             StatePrinter.s_isHeadUp = m_playerState.isHeadUp;
         }
 
+        public static bool GetPlayerControllerByTrigger2D(Collider2D collider, out PlayerController controller)
+        {
+            return collider.gameObject.transform.parent.TryGetComponent<PlayerController>(out controller);
+        }
+
+        public void OnLatencyArea(float moveDirection)
+        {
+            m_playerState.moveDirection = moveDirection;
+        }
+
         private void m_UpdateSit()
         {
             if(!m_collisionState.isOnGround) return;

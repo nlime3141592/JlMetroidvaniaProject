@@ -8,6 +8,8 @@ namespace JlMetroidvaniaProject.Physics
 {
     public static class MetroidPhysics
     {
+        public static readonly Vector2 c_TEMPORARY_PLAYER_GROUND_POSITION = new Vector2(0.0f, -9.0f);
+        
         private static Vector2 s_m_tempVector2_01;
         private static Vector2 s_m_tempVector2_02;
 

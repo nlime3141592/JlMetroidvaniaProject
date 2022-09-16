@@ -10,6 +10,25 @@ public class Player : Entity
     public Animator animator;
     public ElongatedHexagonCollider2D hexaCol;
     private Vector2 hexaColOffset;
+
+    public GameObject obj1;
+    public GameObject obj2;
+    public GameObject obj3;
+    public GameObject obj4;
+    public GameObject obj5;
+    public GameObject obj6;
+    public GameObject obj7;
+    public GameObject obj8;
+
+    public void Test()
+    {
+        obj1.transform.position = hPos;
+        obj2.transform.position = hlPos;
+        obj3.transform.position = hrPos;
+        obj4.transform.position = fPos;
+        obj5.transform.position = flPos;
+        obj6.transform.position = frPos;
+    }
     #endregion
 
     #region Player State Constants
@@ -119,7 +138,7 @@ public class Player : Entity
 
     // 플레이어 이동 관련 속성
     private bool canUpdateLookDir = true;
-    private int lookDir;
+    public int lookDir;
     public bool isRun;
     protected float vx; // NOTE: 값 임시 저장을 위한 변수
     protected float vy; // NOTE: 값 임시 저장을 위한 변수
@@ -289,19 +308,19 @@ public class Player : Entity
     {
         Vector2 pPos = transform.position;
 
-        hPos.Set(pPos.x + dir_hPos.x, pPos.y + dir_hPos.y);
-        hlPos.Set(pPos.x + dir_hlPos.x, pPos.y + dir_hlPos.y);
-        hrPos.Set(pPos.x + dir_hrPos.x, pPos.y + dir_hrPos.y);
-        fPos.Set(pPos.x + dir_fPos.x, pPos.y + dir_fPos.y);
-        flPos.Set(pPos.x + dir_flPos.x, pPos.y + dir_flPos.y);
-        frPos.Set(pPos.x + dir_frPos.x, pPos.y + dir_frPos.y);
-        cPos.Set(pPos.x + dir_cPos.x, pPos.y + dir_cPos.y);
-        clPos.Set(pPos.x + dir_clPos.x, pPos.y + dir_clPos.y);
-        crPos.Set(pPos.x + dir_crPos.x, pPos.y + dir_crPos.y);
-        ltPos.Set(pPos.x + dir_ltPos.x, pPos.y + dir_ltPos.y);
-        lbPos.Set(pPos.x + dir_lbPos.x, pPos.y + dir_lbPos.y);
-        rtPos.Set(pPos.x + dir_rtPos.x, pPos.y + dir_rtPos.y);
-        rbPos.Set(pPos.x + dir_rbPos.x, pPos.y + dir_rbPos.y);
+        hPos.Set(pPos.x + dir_hPos.x * lookDir, pPos.y + dir_hPos.y);
+        hlPos.Set(pPos.x + dir_hlPos.x * lookDir, pPos.y + dir_hlPos.y);
+        hrPos.Set(pPos.x + dir_hrPos.x * lookDir, pPos.y + dir_hrPos.y);
+        fPos.Set(pPos.x + dir_fPos.x * lookDir, pPos.y + dir_fPos.y);
+        flPos.Set(pPos.x + dir_flPos.x * lookDir, pPos.y + dir_flPos.y);
+        frPos.Set(pPos.x + dir_frPos.x * lookDir, pPos.y + dir_frPos.y);
+        cPos.Set(pPos.x + dir_cPos.x * lookDir, pPos.y + dir_cPos.y);
+        clPos.Set(pPos.x + dir_clPos.x * lookDir, pPos.y + dir_clPos.y);
+        crPos.Set(pPos.x + dir_crPos.x * lookDir, pPos.y + dir_crPos.y);
+        ltPos.Set(pPos.x + dir_ltPos.x * lookDir, pPos.y + dir_ltPos.y);
+        lbPos.Set(pPos.x + dir_lbPos.x * lookDir, pPos.y + dir_lbPos.y);
+        rtPos.Set(pPos.x + dir_rtPos.x * lookDir, pPos.y + dir_rtPos.y);
+        rbPos.Set(pPos.x + dir_rbPos.x * lookDir, pPos.y + dir_rbPos.y);
     }
 
     protected void UpdateLookDir()
@@ -318,7 +337,7 @@ public class Player : Entity
         {
             lookDir = xInput;
             hexaCol.offset = new Vector2(hexaColOffset.x * lookDir, hexaColOffset.y);
-            spRenderer.flipX = (lookDir == 1); 
+            spRenderer.flipX = (lookDir == -1); 
         }
     }
 
@@ -393,6 +412,10 @@ public class Player : Entity
         Vector2 fsPos = Vector2.zero;
         Vector2 hsPos = Vector2.zero;
 
+// NOTE: 
+// ElongatedHexagonCollider2D의 offset 문제로 인해 Direction이 뒤집히는 현상이 있음.
+// 이때문에, lookDir에 따라 left pos 또는 right pos를 구분하는 것이 아니라, right pos만 사용하게 됨.
+/*
         if(lookDir == 1)
         {
             fsPos = rbPos;
@@ -403,6 +426,12 @@ public class Player : Entity
             fsPos = lbPos;
             hsPos = ltPos;
         }
+*/
+        fsPos = rbPos;
+        hsPos = rtPos;
+
+        obj7.transform.position = fsPos;
+        obj8.transform.position = hsPos;
 
         float detectLength = 0.04f;
 
@@ -458,6 +487,10 @@ public class Player : Entity
         Vector2 bodyPos = Vector2.zero;
         Vector2 detectDir = Vector2.zero;
 
+// NOTE: 
+// ElongatedHexagonCollider2D의 offset 문제로 인해 Direction이 뒤집히는 현상이 있음.
+// 이때문에, lookDir에 따라 left pos 또는 right pos를 구분하는 것이 아니라, right pos만 사용하게 됨.
+/*
         if(lookDir == 1)
         {
             sidePos = rtPos;
@@ -472,6 +505,11 @@ public class Player : Entity
             bodyPos = clPos;
             detectDir.Set(-1.0f, 0.0f);
         }
+*/
+        sidePos = rtPos;
+        sideOverPos.Set(hrPos.x, hrPos.y + ledgeCheckingHeight);
+        bodyPos = crPos;
+        detectDir.Set(1.0f * lookDir, 0.0f);
 
         RaycastHit2D sideHit = Physics2D.Raycast(sidePos, detectDir, ledgeCheckingWidth, layer);
         RaycastHit2D sideOverHit = Physics2D.Raycast(sideOverPos, detectDir, ledgeCheckingWidth, layer);
@@ -628,6 +666,7 @@ public class Player : Entity
         UpdateMoveDirection();
 
         machine.UpdateLogic();
+        Test();
     }
     #endregion
 
@@ -1175,11 +1214,16 @@ public class Player : Entity
         Vector2 sidePos = Vector2.zero;
         Vector2 handDir = Vector2.zero;
         Vector2 feetDir = Vector2.zero;
-
+// NOTE: 
+// ElongatedHexagonCollider2D의 offset 문제로 인해 Direction이 뒤집히는 현상이 있음.
+// 이때문에, lookDir에 따라 left pos 또는 right pos를 구분하는 것이 아니라, right pos만 사용하게 됨.
+/*
         if(lookDir == 1)
             sidePos = rtPos;
         else if(lookDir == -1)
             sidePos = ltPos;
+*/
+        sidePos = rtPos;
 
         handDir.Set(transform.position.x - sidePos.x, transform.position.y - sidePos.y);
         feetDir.Set(transform.position.x - fPos.x, transform.position.y - fPos.y);
@@ -1231,11 +1275,16 @@ public class Player : Entity
         Vector2 sidePos = Vector2.zero;
         Vector2 handDir = Vector2.zero;
         Vector2 feetDir = Vector2.zero;
-
+// NOTE: 
+// ElongatedHexagonCollider2D의 offset 문제로 인해 Direction이 뒤집히는 현상이 있음.
+// 이때문에, lookDir에 따라 left pos 또는 right pos를 구분하는 것이 아니라, right pos만 사용하게 됨.
+/*
         if(lookDir == 1)
             sidePos = crPos;
         else if(lookDir == -1)
             sidePos = clPos;
+*/
+        sidePos = crPos;
 
         handDir.Set(transform.position.x - sidePos.x, transform.position.y - sidePos.y);
         feetDir.Set(transform.position.x - fPos.x, transform.position.y - fPos.y);
@@ -1572,6 +1621,9 @@ public class Player : Entity
         isTakeDownAirIdleEnded = false;
         isLandingAfterTakeDown = false;
 
+        animator.SetBool("isTakeDownAirEnd", false);
+        animator.SetBool("isTakeDownFallingEnd", false);
+
         // rigid.constraints |= RigidbodyConstraints2D.FreezePositionX;
     }
 
@@ -1596,7 +1648,10 @@ public class Player : Entity
             SetVelocityXY(0.0f, 0.0f);
 
             if(leftTakeDownAirIdleFrame == 0)
+            {
                 isTakeDownAirIdleEnded = true;
+                animator.SetBool("isTakeDownAirEnd", true);
+            }
         }
         else if(isTakeDownAirIdleEnded && !isLandingAfterTakeDown)
         {
@@ -1607,6 +1662,7 @@ public class Player : Entity
             {
                 leftTakeDownLandingIdleFrame = takeDownLandingIdleFrame;
                 isLandingAfterTakeDown = true;
+                animator.SetBool("isTakeDownFallingEnd", true);
             }
         }
         else if(leftTakeDownLandingIdleFrame > 0)
@@ -1623,6 +1679,8 @@ public class Player : Entity
     private void End_TakeDown()
     {
         // rigid.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
+        animator.SetBool("isTakeDownAirEnd", false);
+        animator.SetBool("isTakeDownFallingEnd", false);
     }
     #endregion
 

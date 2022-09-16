@@ -7,6 +7,7 @@ public class Player : Entity
 {
     #region Components
     public SpriteRenderer spRenderer;
+    public Animator animator;
     public ElongatedHexagonCollider2D hexaCol;
     private Vector2 hexaColOffset;
     #endregion
@@ -606,6 +607,7 @@ public class Player : Entity
 
         machine.UpdateInput();
 
+        animator.SetInteger("currentState", machine.state);
         // UnityEngine.Debug.Log(string.Format("current state: {0}", machine.state));
     }
 

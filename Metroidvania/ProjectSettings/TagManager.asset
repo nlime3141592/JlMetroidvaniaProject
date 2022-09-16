@@ -15,9 +15,9 @@ TagManager:
   - Camera
   - Water
   - UI
-  - Landscape
-  - Terrain
-  - Interactives
+  - 
+  - Ground
+  - SemiGround
   - Entity
   - 
   - 

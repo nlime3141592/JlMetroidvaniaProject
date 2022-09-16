@@ -1,9 +1,13 @@
 sceneSetups:
-- path: Assets/Scenes/PlayerScene.unity
+- path: Assets/Scene/PlayerScene.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
-- path: Assets/Scenes/SampleScene.unity
+- path: Assets/Scene/ManagerScene.unity
+  isLoaded: 1
+  isActive: 0
+  isSubScene: 0
+- path: Assets/Scene/Worlds/DummyMap.unity
   isLoaded: 1
   isActive: 0
   isSubScene: 0

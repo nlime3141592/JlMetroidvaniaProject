@@ -51,6 +51,8 @@ public class Player : Entity
     private const int stDash = 16;
     private const int stTakeDown = 17;
     private const int stJumpWall = 18;
+    private const int stWalkUp = 19;
+    private const int stRunUp = 20;
     #endregion
 
     // NOTE: 플레이어 초기 위치, 테스트를 위한 벡터 변수, 릴리즈 시 제거해야 함.
@@ -272,6 +274,14 @@ public class Player : Entity
     private int jumpWallLookDir;
     private bool isJumpWallCanceledX;
     private bool isJumpWallCanceledXY;
+
+    // stWalkUp options
+    public int walkUpFrame = 8;
+    private int leftWalkUpFrame;
+
+    // stRunUp options
+    public int runUpFrame = 8;
+    private int leftRunUpFrame;
     #endregion
 
     private void m_InitPositions()
@@ -441,7 +451,7 @@ public class Player : Entity
 
     protected void CheckHeadOverSemiGround()
     {
-        float detectLength = base.height + 0.5f;
+        float detectLength = hPos.y - fPos.y + 0.5f;
         int layer = LayerInfo.semiGroundMask;
 
         headOverSemiGroundBefores = headOverSemiGroundCurrents;
@@ -616,6 +626,8 @@ public class Player : Entity
         machine.SetCallbacks(stDash, Input_Dash, Logic_Dash, Enter_Dash, null);
         machine.SetCallbacks(stTakeDown, Input_TakeDown, Logic_TakeDown, Enter_TakeDown, End_TakeDown);
         machine.SetCallbacks(stJumpWall, Input_JumpWall, Logic_JumpWall, Enter_JumpWall, null);
+        machine.SetCallbacks(stWalkUp, Input_WalkUp, Logic_WalkUp, Enter_WalkUp, null); // NOTE: 걷기에서 일어나는 임시 상태를 추가해주기 위해 넣는 콜백 함수
+        machine.SetCallbacks(stRunUp, Input_RunUp, Logic_RunUp, Enter_RunUp, null); // NOTE: 달리기에서 일어나는 임시 상태를 추가해주기 위해 넣는 콜백 함수
 
         // TODO: ApplyFile은 테스트할 때만 사용하고, 본 스크립트의 초기값을 설정하고, InitGraphs() 함수만 수행하도록 한다.
         // InitGraphs();
@@ -866,7 +878,7 @@ public class Player : Entity
         else if(inputData.dashDown)
             machine.ChangeState(stRoll);
         else if(inputData.xInput == 0)
-            machine.ChangeState(stIdleGround);
+            machine.ChangeState(stWalkUp);
     }
 
     private void Logic_Walk()
@@ -903,7 +915,7 @@ public class Player : Entity
         else if(inputData.dashDown)
             machine.ChangeState(stRoll);
         else if(inputData.xInput == 0)
-            machine.ChangeState(stIdleGround);
+            machine.ChangeState(stRunUp);
     }
 
     private void Logic_Run()
@@ -1410,8 +1422,8 @@ public class Player : Entity
         if(leftJumpDownFrame > 0)
         {
             leftJumpDownFrame--;
-            // vx = GetMoveSpeed() * inputData.xInput;
-            vx = 0.0f;
+            vx = GetMoveSpeed() * inputData.xInput;
+            // vx = 0.0f;
             vy = jumpDownSpeed * jumpDownGraph[leftJumpDownFrame];
             SetVelocityXY(vx, vy);
 
@@ -1423,7 +1435,8 @@ public class Player : Entity
             if(proceedFreeFallFrame < freeFallFrame)
                 proceedFreeFallFrame++;
 
-            vx = 0.0f;
+            vx = GetMoveSpeed() * inputData.xInput;
+            // vx = 0.0f;
             vy = -maxFreeFallSpeed * freeFallGraph[proceedFreeFallFrame - 1];
             SetVelocityXY(vx, vy);
         }
@@ -1755,6 +1768,54 @@ public class Player : Entity
 
             SetVelocityXY(vx, vy);
         }
+    }
+    #endregion
+
+    #region Implement State; stWalkUp
+    private void Enter_WalkUp()
+    {
+        Enter_IdleGround();
+        leftWalkUpFrame = walkUpFrame;
+    }
+
+    private void Input_WalkUp()
+    {
+        if(leftWalkUpFrame == 0)
+            machine.ChangeState(stIdleGround);
+        else
+            Input_IdleGround();
+    }
+
+    private void Logic_WalkUp()
+    {
+        if(leftWalkUpFrame > 0)
+            leftWalkUpFrame--;
+
+        Logic_IdleGround();
+    }
+    #endregion
+
+    #region Implement State; stRunUp
+    private void Enter_RunUp()
+    {
+        Enter_IdleGround();
+        leftRunUpFrame = runUpFrame;
+    }
+
+    private void Input_RunUp()
+    {
+        if(leftRunUpFrame == 0)
+            machine.ChangeState(stIdleGround);
+        else
+            Input_IdleGround();
+    }
+
+    private void Logic_RunUp()
+    {
+        if(leftRunUpFrame > 0)
+            leftRunUpFrame--;
+
+        Logic_IdleGround();
     }
     #endregion
 
